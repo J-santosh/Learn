@@ -1,0 +1,11 @@
+ var httpContext = new DefaultHttpContext();
+        httpContext.Session = new TestSession();
+        httpContext.Response.Cookies.Append(".AspNetCore.Session", "fake-cookie-value");
+        var httpContextAccessor = new HttpContextAccessor() { HttpContext = httpContext };
+        
+        // Act
+        await MyClass.SignOutAndClearSessionAsync(httpContextAccessor);
+
+        // Assert
+        Assert.Null(httpContext.Session.GetString("SomeKey"));
+        Assert.False(httpContext.Response.Cookies.ContainsKey(".AspNetCore.Session"));
